@@ -5,8 +5,8 @@ var cluster = require('cluster');
 if (cluster.isMaster) {
 
     // Count the machine's CPUs
-    //var cpuCount = require('os').cpus().length;
-    var cpuCount = 1
+    var cpuCount = require('os').cpus().length;
+    //var cpuCount = 1
 
     // Create a worker for each CPU
     for (var i = 0; i < cpuCount; i += 1) {
@@ -38,7 +38,10 @@ if (cluster.isMaster) {
     });
 
     // Bind to a port
-    app.listen(3000);
+    app.set('port', process.env.PORT || 3000);
+    var server = app.listen(app.get('port'), function() {
+       console.log('Express server listening on port ' + server.address().port);
+    });
     console.log('Worker %d running!', cluster.worker.id);
 
 }
